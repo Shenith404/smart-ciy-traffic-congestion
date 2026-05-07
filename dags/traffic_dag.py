@@ -26,7 +26,7 @@ with DAG(
     'smart_city_daily_report',
     default_args=default_args,
     description='Nightly aggregation of traffic data with peak hour analysis',
-    schedule_interval='0 2 * * *',  # Runs at 2 AM daily
+    schedule_interval=None,  # Manual trigger only for video/demo runs
     start_date=datetime(2024, 1, 1),
     catchup=False,
     tags=['traffic', 'batch', 'smart-city'],

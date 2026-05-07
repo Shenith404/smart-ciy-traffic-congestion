@@ -32,14 +32,15 @@ def fetch_traffic_data():
         conn = psycopg2.connect(**DB_CONFIG)
         
         # Query 1: Hourly traffic volume
+        # Use window_start and total_vehicles columns written by Spark
         query_hourly = """
             SELECT 
-                EXTRACT(HOUR FROM timestamp) as hour,
+                EXTRACT(HOUR FROM window_start) as hour,
                 sensor_id,
-                SUM(vehicle_count) as total_vehicles
+                SUM(total_vehicles) as total_vehicles
             FROM traffic_windows
             WHERE window_start >= CURRENT_DATE - INTERVAL '7 days'
-            GROUP BY sensor_id, EXTRACT(HOUR FROM timestamp)
+            GROUP BY sensor_id, EXTRACT(HOUR FROM window_start)
             ORDER BY sensor_id, hour
         """
         
@@ -195,43 +196,23 @@ def generate_text_report(df_peaks):
 
 
 def export_csv_report(df_hourly, df_peaks):
-    """Export the analyzed report as CSV for submission."""
+    """Export the analyzed report as CSV for submission ."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     csv_path = os.path.join(REPORT_DIR, f"traffic_report_{timestamp}.csv")
     latest_csv_path = os.path.join(REPORT_DIR, "traffic_report_latest.csv")
 
-    if df_hourly.empty and df_peaks.empty:
-        print("⚠ No data available to export as CSV.")
+    if df_peaks.empty:
+        print("⚠ No peak traffic data available for CSV export.")
         return
 
-    report_rows = []
-
-    if not df_peaks.empty:
-        for _, row in df_peaks.iterrows():
-            report_rows.append({
-                "report_type": "peak_traffic",
-                "junction_id": row.get("junction_id"),
-                "peak_hour": row.get("peak_hour"),
-                "max_vehicle_count": row.get("max_vehicle_count"),
-                "report_date": row.get("report_date"),
-                "hour": None,
-                "total_vehicles": None,
-            })
-
-    if not df_hourly.empty:
-        for _, row in df_hourly.iterrows():
-            report_rows.append({
-                "report_type": "hourly_traffic",
-                "junction_id": row.get("sensor_id"),
-                "peak_hour": None,
-                "max_vehicle_count": None,
-                "report_date": None,
-                "hour": row.get("hour"),
-                "total_vehicles": row.get("total_vehicles"),
-            })
-
-    report_df = pd.DataFrame(report_rows)
+    # Export only peak traffic stats (one row per junction) - no duplicates
+    report_df = df_peaks[['junction_id', 'peak_hour', 'max_vehicle_count', 'report_date']].copy()
+    report_df.columns = ['Junction', 'Peak Hour', 'Max Vehicles', 'Report Date']
+    
+    # Remove duplicate junctions (keep first occurrence only)
+    report_df = report_df.drop_duplicates(subset=['Junction'], keep='first')
+    
     report_df.to_csv(csv_path, index=False)
     report_df.to_csv(latest_csv_path, index=False)
 
