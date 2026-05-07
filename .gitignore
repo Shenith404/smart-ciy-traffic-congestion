@@ -1,0 +1,45 @@
+# Ignore everything by default, then allow only the project files we want visible.
+/*
+!/.gitignore
+!/README.md
+!/docker-compose.yaml
+!/init.sql
+!/requirements.txt
+!/setup_hadoop_windows.py
+!/dags/
+!/src/
+
+# Keep the source files inside the allowed folders.
+!/dags/*.py
+!/src/*.py
+
+# Python cache files that can appear inside the allowed source folders.
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Explicitly hide generated runtime data and local environments.
+/data/
+/hadoop/
+/venv/
+/.venv/
+/.pytest_cache/
+/.mypy_cache/
+/.ruff_cache/
+/.ipynb_checkpoints/
+/logs/
+/spark-warehouse/
+/airflow.db
+/*.csv
+/*.png
+/*.pdf
+/*.local
+/.env
+
+# Common editor and OS noise.
+/.vscode/
+/.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store

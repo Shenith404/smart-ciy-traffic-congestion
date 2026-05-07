@@ -1,0 +1,32 @@
+# Kafka
+kafka-python==2.0.2
+
+# Spark
+pyspark==3.5.0
+
+# Database
+psycopg2-binary==2.9.9
+
+# Data Analysis & Visualization
+pandas==2.1.4
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# Airflow (Optional - used if running locally)
+apache-airflow==2.7.3
+
+# ============================================
+# Installation Instructions:
+# ============================================
+# 1. Create virtual environment:
+#    python -m venv venv
+#
+# 2. Activate virtual environment:
+#    Windows:   venv\Scripts\activate
+#    Mac/Linux: source venv/bin/activate
+#
+# 3. Install dependencies:
+#    pip install -r requirements.txt
+#
+# Note: For production, use docker-compose to run all services
+# ============================================
