@@ -20,7 +20,7 @@
 *.pyd
 
 # Explicitly hide generated runtime data and local environments.
-/data/
+/src/data
 /hadoop/
 /venv/
 /.venv/

@@ -1,10 +1,41 @@
+import os
+import sys
+import platform
+
+# Windows-specific fix for Hadoop
+if platform.system() == "Windows":
+    # Set HADOOP_HOME to a dummy directory to avoid FileNotFoundException
+    if "HADOOP_HOME" not in os.environ:
+        hadoop_home = os.path.join(os.path.dirname(__file__), "..", "hadoop")
+        hadoop_home = os.path.abspath(hadoop_home)
+        os.environ["HADOOP_HOME"] = hadoop_home
+        os.environ["hadoop.home.dir"] = hadoop_home
+        
+        # Add hadoop/bin to PATH so DLLs can be found
+        bin_dir = os.path.join(hadoop_home, "bin")
+        if bin_dir not in os.environ.get("PATH", ""):
+            os.environ["PATH"] = bin_dir + os.pathsep + os.environ.get("PATH", "")
+        
+        # Create the directory structure if it doesn't exist
+        os.makedirs(bin_dir, exist_ok=True)
+        
+        # Check if winutils.exe exists
+        winutils_path = os.path.join(bin_dir, "winutils.exe")
+        if not os.path.exists(winutils_path):
+            print("=" * 60)
+            print("⚠️  WARNING: winutils.exe NOT FOUND")
+            print("=" * 60)
+            print(f"Expected location: {winutils_path}")
+            print("\nPlease run the setup script first:")
+            print("  python setup_hadoop_windows.py")
+            sys.exit(1)
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     hour, col, to_date, current_date, date_sub, 
     sum as spark_sum, desc
 )
 from pyspark.sql.window import Window
-import os
 from datetime import datetime, timedelta
 
 # Initialize Spark
@@ -80,7 +111,7 @@ peak_traffic = hourly_traffic \
         col("hour").alias("peak_hour"),
         col("total_count").alias("max_vehicle_count")
     ) \
-    .withColumn("report_date", spark_lit(str(target_date)))
+    .withColumn("report_date", to_date(spark_lit(str(target_date))))
 
 print("\n" + "="*60)
 print("PEAK TRAFFIC HOURS PER JUNCTION")

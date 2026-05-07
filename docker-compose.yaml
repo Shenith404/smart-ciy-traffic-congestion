@@ -21,7 +21,7 @@ services:
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
 
   postgres:
-    image: postgres:latest
+    image: postgres:13
     ports:
       - "5432:5432"
     environment:
