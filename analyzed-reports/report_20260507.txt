@@ -1,0 +1,31 @@
+======================================================================
+SMART CITY TRAFFIC MANAGEMENT REPORT - COLOMBO
+Generated: 2026-05-07 16:57:03
+======================================================================
+
+JUNCTIONS REQUIRING TRAFFIC POLICE INTERVENTION:
+----------------------------------------------------------------------
+
+1. Junction: J002
+   Peak Hour: 15:00
+   Max Vehicles: 86133
+   Report Date: 2026-05-07
+
+2. Junction: J001
+   Peak Hour: 15:00
+   Max Vehicles: 85044
+   Report Date: 2026-05-07
+
+3. Junction: J003
+   Peak Hour: 15:00
+   Max Vehicles: 84817
+   Report Date: 2026-05-07
+
+4. Junction: J004
+   Peak Hour: 15:00
+   Max Vehicles: 84224
+   Report Date: 2026-05-07
+
+======================================================================
+RECOMMENDATION: Deploy traffic police at above junctions during peak hours
+======================================================================

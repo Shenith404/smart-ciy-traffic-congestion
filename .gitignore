@@ -8,10 +8,12 @@
 !/setup_hadoop_windows.py
 !/dags/
 !/src/
+!/analyzed-reports/
 
 # Keep the source files inside the allowed folders.
 !/dags/*.py
 !/src/*.py
+!/analyzed-reports/**
 
 # Python cache files that can appear inside the allowed source folders.
 **/__pycache__/
