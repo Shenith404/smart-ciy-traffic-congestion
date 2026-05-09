@@ -1,55 +1,56 @@
 # Smart City Traffic Congestion Monitoring System
 
 ## Colombo Traffic Management - Lambda Architecture Implementation
+---
 
-### 📋 Project Overview
+###  Project Overview
 
 This project implements an end-to-end **Lambda Architecture** data pipeline for real-time traffic monitoring in Colombo, Sri Lanka. The system processes sensor data from 4 major junctions to detect congestion, generate alerts, and provide daily analytical reports for traffic management.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ### Lambda Architecture Components
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                         DATA SOURCES                              │
-│              (4 Junctions: J001, J002, J003, J004)               │
+│                         DATA SOURCES                            │
+│              (4 Junctions: J001, J002, J003, J004)              │
 └──────────────┬──────────────────────────────────────────────────┘
                │
                ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│                      SPEED LAYER (Real-time)                      │
-│  ┌────────────┐    ┌─────────────┐    ┌──────────────────┐     │
-│  │   Kafka    │───▶│Spark Stream │───▶│  PostgreSQL      │     │
-│  │  Producer  │    │  Processor  │    │  (Alerts & Data) │     │
-│  └────────────┘    └─────────────┘    └──────────────────┘     │
-│                           │                                       │
-│                           ▼                                       │
-│                    ┌─────────────┐                                │
+│                      SPEED LAYER (Real-time)                     │
+│  ┌────────────┐    ┌─────────────┐    ┌──────────────────┐       │
+│  │   Kafka    │───▶│Spark Stream │───▶│  PostgreSQL     │       │
+│  │  Producer  │    │  Processor  │    │  (Alerts & Data) │       │
+│  └────────────┘    └─────────────┘    └──────────────────┘       │
+│                           │                                      │
+│                           ▼                                      │
+│                    ┌─────────────┐                               │
 │                    │   Parquet   │  (Data Lake)                  │
-│                    └─────────────┘                                │
+│                    └─────────────┘                               │
 └──────────────────────────────────────────────────────────────────┘
                │
                ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│                      BATCH LAYER (Historical)                     │
-│  ┌────────────┐    ┌─────────────┐    ┌──────────────────┐     │
-│  │  Airflow   │───▶│Spark Batch  │───▶│  PostgreSQL      │     │
-│  │   (DAG)    │    │  Analyzer   │    │  (Peak Reports)  │     │
-│  └────────────┘    └─────────────┘    └──────────────────┘     │
-│                           │                                       │
-│                           ▼                                       │
-│                    ┌─────────────┐                                │
-│                    │Visualization│                                │
-│                    └─────────────┘                                │
+│                      BATCH LAYER (Historical)                    │
+│  ┌────────────┐    ┌─────────────┐    ┌──────────────────┐       │
+│  │  Airflow   │───▶│Spark Batch  │───▶│  PostgreSQL     │       │
+│  │   (DAG)    │    │  Analyzer   │    │  (Peak Reports)  │       │
+│  └────────────┘    └─────────────┘    └──────────────────┘       │
+│                           │                                      │
+│                           ▼                                      │
+│                    ┌─────────────┐                               │
+│                    │Visualization│                               │
+│                    └─────────────┘                               │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🔧 Technical Stack
+## Technical Stack
 
 | Component             | Technology                          |
 | --------------------- | ----------------------------------- |
@@ -62,7 +63,7 @@ This project implements an end-to-end **Lambda Architecture** data pipeline for 
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 smart-city-traffic-congestion/
@@ -84,7 +85,7 @@ smart-city-traffic-congestion/
 
 ---
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 
@@ -139,7 +140,7 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ Running the System
+##  Running the System
 
 ### Option A: Manual Execution (Recommended for Testing)
 
@@ -160,11 +161,11 @@ python src/spark_processor.py
 
 This will:
 
-- ✅ Apply 5-minute tumbling windows
-- ✅ Calculate **Congestion Index** = `(vehicle_count / avg_speed) × 10`
-- ✅ Detect critical traffic (speed < 10 km/h)
-- ✅ Write alerts to PostgreSQL `critical_alerts` table
-- ✅ Archive raw data to Parquet for batch processing
+-  Apply 5-minute tumbling windows
+-  Calculate **Congestion Index** = `(vehicle_count / avg_speed) × 10`
+-  Detect critical traffic (speed < 10 km/h)
+-  Write alerts to PostgreSQL `critical_alerts` table
+-  Archive raw data to Parquet for batch processing
 
 #### 3. Trigger Airflow DAG (Batch Processing)
 
@@ -183,11 +184,11 @@ docker exec -it <airflow_container_id> airflow dags trigger smart_city_daily_rep
 
 The batch job will:
 
-- ✅ Load yesterday's data from Parquet
-- ✅ Calculate peak traffic hour per junction
-- ✅ Generate intervention recommendations
-- ✅ Write report to PostgreSQL `peak_traffic_stats`
-- ✅ Create visualization charts
+-  Load yesterday's data from Parquet
+-  Calculate peak traffic hour per junction
+-  Generate intervention recommendations
+-  Write report to PostgreSQL `peak_traffic_stats`
+-  Create visualization charts
 
 #### 4. View Results
 
@@ -218,66 +219,38 @@ data/reports/traffic_report_latest.csv
 
 ---
 
-## 📊 Key Features Implemented
+##  Key Features Implemented
 
 ### 1. Real-Time Stream Processing (Speed Layer)
 
-- ✅ **5-Minute Tumbling Windows** with watermarking
-- ✅ **Congestion Index** calculation per window
-- ✅ Immediate alert on `avg_speed < 10 km/h`
-- ✅ Windowed aggregations stored in `traffic_windows` table
+-  **5-Minute Tumbling Windows** with watermarking
+-  **Congestion Index** calculation per window
+-  Immediate alert on `avg_speed < 10 km/h`
+-  Windowed aggregations stored in `traffic_windows` table
 
 ### 2. Batch Processing (Batch Layer)
 
-- ✅ Nightly Airflow DAG scheduled at 2 AM
-- ✅ Processes previous day's data from Parquet lake
-- ✅ Identifies **Peak Traffic Hour** per junction
-- ✅ Generates intervention recommendations
+-  Nightly Airflow DAG scheduled at 2 AM
+-  Processes previous day's data from Parquet lake
+-  Identifies **Peak Traffic Hour** per junction
+-  Generates intervention recommendations
 
 ### 3. Data Storage
 
-- ✅ **PostgreSQL**: Real-time alerts, batch reports, windowed aggregations
-- ✅ **Parquet**: Data lake for historical analysis (partitioned by sensor_id)
+-  **PostgreSQL**: Real-time alerts, batch reports, windowed aggregations
+-  **Parquet**: Data lake for historical analysis (partitioned by sensor_id)
 
 ### 4. Analytics & Visualization
 
-- ✅ Traffic Volume vs. Time of Day (line chart)
-- ✅ Average traffic by junction (bar chart)
-- ✅ Traffic intensity heatmap
-- ✅ Peak traffic statistics table
-- ✅ CSV analyzed report output for submission
+-  Traffic Volume vs. Time of Day (line chart)
+-  Average traffic by junction (bar chart)
+-  Traffic intensity heatmap
+-  Peak traffic statistics table
+-  CSV analyzed report output 
 
 ---
 
-## 🎯 Assignment Requirements Checklist
-
-| Requirement           | Status | Implementation                                 |
-| --------------------- | ------ | ---------------------------------------------- |
-| Kafka Ingestion       | ✅     | `producer.py` - 4 junctions, 1 msg/sec         |
-| Spark Streaming       | ✅     | `spark_processor.py` with structured streaming |
-| 5-Min Windows         | ✅     | Tumbling windows + watermarking                |
-| Congestion Index      | ✅     | `(vehicle_count / avg_speed) × 10`             |
-| Speed < 10 Alerts     | ✅     | Immediate write to DB                          |
-| Airflow Orchestration | ✅     | `traffic_dag.py` - nightly batch               |
-| Peak Hour Analysis    | ✅     | `batch_analizer.py`                            |
-| PostgreSQL Storage    | ✅     | 3 tables with proper schema                    |
-| Parquet Archive       | ✅     | Partitioned by sensor_id                       |
-| Visualization         | ✅     | `visualize_traffic.py`                         |
-| Docker Compose        | ✅     | Multi-service setup                            |
-
----
-
-## Submission Notes (Missing Deliverables)
-
-The following items are not committed in this repository and must be generated or written before submission:
-
-- Architecture diagram image (PNG/PDF) that visually shows Source -> Kafka -> Processing -> Storage -> Airflow/Report.
-- Analyzed report output: there is no generated report file in the repo (no PNG/PDF/CSV output committed). The visualization script will create it once you run the batch job and visualization, but the output isn't present right now. (CSV output is acceptable.)
-- 1500-word project report (tool justification, event time vs processing time, ethics/privacy section).
-
----
-
-## 🔬 Testing Critical Traffic Scenario
+##  Testing Critical Traffic Scenario
 
 1. Start producer: `python src/producer.py`
 2. Start stream processor: `python src/spark_processor.py`
@@ -294,7 +267,7 @@ The following items are not committed in this repository and must be generated o
 
 ---
 
-## 📈 Performance Tuning
+##  Performance Tuning
 
 ### For Large Data Volumes:
 
@@ -313,7 +286,7 @@ The following items are not committed in this repository and must be generated o
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Issue: Kafka Connection Refused
 
@@ -343,7 +316,7 @@ docker exec -it <postgres_container_id> psql -U admin -d smartcity_db -c "\dt"
 
 ---
 
-## 📚 Data Schema
+##  Data Schema
 
 ### Kafka Message Format
 
@@ -391,49 +364,13 @@ report_date     | DATE
 
 ---
 
-## 🎓 Academic Context
-
-**Course**: Big Data Analysis  
-**Semester**: 8th  
-**Domain**: IoT & Logistics  
-**Architecture**: Lambda  
-**Scenario**: Smart City Traffic Management
-
-This project demonstrates:
-
-- Real-time stream processing with Spark Structured Streaming
-- Batch processing orchestration with Airflow
-- Lambda architecture implementation
-- Data lake patterns with Parquet
-- IoT sensor simulation
-- Scalable data pipeline design
-
----
-
-## 📝 Future Enhancements
-
-- [ ] Add Kafka partitioning strategy
-- [ ] Implement Kappa architecture variant
-- [ ] Add machine learning predictions
-- [ ] Deploy to cloud (AWS/Azure)
-- [ ] Add dashboard with real-time charts
-- [ ] Implement alerting via email/SMS
-
----
-
-## 👥 Contributors
-
-Student Project - University of [Your University]
-
----
-
-## 📄 License
+##  License
 
 MIT License - Academic Use
 
 ---
 
-## 🆘 Support
+##  Support
 
 For issues:
 
@@ -443,4 +380,4 @@ For issues:
 
 ---
 
-**Happy Coding! 🚀**
+
